@@ -21,7 +21,7 @@ _steps = [
 
 
 # This automatically reads in the configuration
-@hydra.main(config_name='config')
+@hydra.main(config_path='.',config_name='config')
 def go(config: DictConfig):
 
     # Setup the wandb experiment. All runs will be grouped under this name
@@ -33,7 +33,11 @@ def go(config: DictConfig):
     active_steps = steps_par.split(",") if steps_par != "all" else _steps
 
     # Move to a temporary directory
-    with tempfile.TemporaryDirectory() as tmp_dir:
+    with tempfile.NamedTemporaryFile(mode='wb+',
+                                     delete=False,
+                                     dir='C:\\Users\\kenne\\Desktop\\MLFLOW_TEMP'
+                                     ) as fp:
+    #with tempfile.TemporaryDirectory() as tmp_dir:
 
         if "download" in active_steps:
             # Download file and load in W&B
@@ -46,7 +50,7 @@ def go(config: DictConfig):
                     "sample": config["etl"]["sample"],
                     "artifact_name": "sample.csv",
                     "artifact_type": "raw_data",
-                    "artifact_description": "Raw file as downloaded"
+                    "artifact_description": "Raw_file_as_downloaded"
                 },
             )
 
